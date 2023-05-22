@@ -23,7 +23,9 @@ public class InfluxDb
         
         var msg = PointData
             .Measurement("omnet++")
-            .Field("Id", message.Id).Field("Instruction", message.Instruction).Field("X", message.Coordinates.X)
+            .Field("Id", message.Id).Field("Instruction", message.Instruction)
+            .Field("X", message.Coordinates.X)
+            .Field("Y", message.Coordinates.Y).Field("Z", message.Coordinates.Z)
             .Timestamp(DateTime.UtcNow, WritePrecision.Ns);
         
 
