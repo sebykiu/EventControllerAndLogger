@@ -14,6 +14,8 @@ public class Server
     private  readonly IPAddress _ipAddress = IPAddress.Any;
     private Socket _clientSocket;
     private Thread _messageThread;
+
+    private Socket cl;
     
    // private InfluxDb _influxDb = new InfluxDb();
 
@@ -28,6 +30,10 @@ public class Server
         Console.WriteLine("Waiting for Omnet++ Simulation to connect on Port:");
         _clientSocket = serverSocket.Accept();
         Console.WriteLine("Simulation Connected!");
+
+        cl = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+     
+        Console.WriteLine(cl.Connected);
         _messageThread = new Thread(ReceiveData);
         _messageThread.Start();
         
@@ -38,13 +44,17 @@ public class Server
 
     private void ReceiveData()
     {
+        var ep = new IPEndPoint(IPAddress.Parse("192.168.178.63"), 54321);
+        cl.Connect(ep);
+
 
         while (true)
         {
             
             var lengthBuffer = new byte[4];
             _clientSocket.Receive(lengthBuffer, SocketFlags.None);
-            
+            cl.Send(lengthBuffer);
+
             if (BitConverter.IsLittleEndian)
             {
                 Array.Reverse(lengthBuffer);
@@ -57,9 +67,13 @@ public class Server
                 Console.WriteLine("Received empty message. Client is disconnected!");
                 break;
             }
+
+
             
             var messageBuffer = new byte[messageLength];
             var received = _clientSocket.Receive(messageBuffer, SocketFlags.None);
+
+            cl.Send(messageBuffer);
 
             var response = Encoding.UTF8.GetString(messageBuffer, 0, received);
 
