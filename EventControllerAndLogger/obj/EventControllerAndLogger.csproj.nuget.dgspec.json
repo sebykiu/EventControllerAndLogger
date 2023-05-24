@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/home/seby/RiderProjects/EventControllerAndLogger/EventControllerAndLogger/EventControllerAndLogger.csproj": {}
+    "/home/linux/Documents/EventControllerAndLogger/EventControllerAndLogger/EventControllerAndLogger.csproj": {}
   },
   "projects": {
-    "/home/seby/RiderProjects/EventControllerAndLogger/EventControllerAndLogger/EventControllerAndLogger.csproj": {
+    "/home/linux/Documents/EventControllerAndLogger/EventControllerAndLogger/EventControllerAndLogger.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/seby/RiderProjects/EventControllerAndLogger/EventControllerAndLogger/EventControllerAndLogger.csproj",
+        "projectUniqueName": "/home/linux/Documents/EventControllerAndLogger/EventControllerAndLogger/EventControllerAndLogger.csproj",
         "projectName": "EventControllerAndLogger",
-        "projectPath": "/home/seby/RiderProjects/EventControllerAndLogger/EventControllerAndLogger/EventControllerAndLogger.csproj",
-        "packagesPath": "/home/seby/.nuget/packages/",
-        "outputPath": "/home/seby/RiderProjects/EventControllerAndLogger/EventControllerAndLogger/obj/",
+        "projectPath": "/home/linux/Documents/EventControllerAndLogger/EventControllerAndLogger/EventControllerAndLogger.csproj",
+        "packagesPath": "/home/linux/.nuget/packages/",
+        "outputPath": "/home/linux/Documents/EventControllerAndLogger/EventControllerAndLogger/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/home/seby/.nuget/NuGet/NuGet.Config"
+          "/home/linux/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net7.0"
@@ -42,6 +42,26 @@
               "target": "Package",
               "version": "[4.13.0-dev.10871, )"
             },
+            "Microsoft.Extensions.Configuration": {
+              "target": "Package",
+              "version": "[7.0.0, )"
+            },
+            "Microsoft.Extensions.Configuration.EnvironmentVariables": {
+              "target": "Package",
+              "version": "[7.0.0, )"
+            },
+            "Microsoft.Extensions.Configuration.UserSecrets": {
+              "target": "Package",
+              "version": "[7.0.0, )"
+            },
+            "Microsoft.Extensions.Configuration.Yaml": {
+              "target": "Package",
+              "version": "[2.0.0-preview2, )"
+            },
+            "Microsoft.Extensions.Logging.Configuration": {
+              "target": "Package",
+              "version": "[7.0.0, )"
+            },
             "Newtonsoft.Json": {
               "target": "Package",
               "version": "[13.0.3, )"
@@ -63,7 +83,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/home/seby/.dotnet/sdk/7.0.203/RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/home/linux/.dotnet/sdk/7.0.302/RuntimeIdentifierGraph.json"
         }
       }
     }

@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 
 namespace EventControllerAndLogger.Controller;
 
-public class Server
+public class ECAL
 {
 
     private const int PORT = 12345;
@@ -22,7 +22,7 @@ public class Server
    // private InfluxDb _influxDb = new InfluxDb();
 
 
-    public Server()
+    public ECAL()
     {
         _influxDb = new();
         unityClient = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -44,7 +44,7 @@ public class Server
         var endPoint = new IPEndPoint(_ipAddress, PORT);
         serverSocket.Bind(endPoint);
         serverSocket.Listen(1);
-        Console.WriteLine("Waiting for Omnet++ Simulation to connect on Port: {}", PORT);
+        Console.WriteLine("Waiting for Omnet++ Simulation to connect on Port: {}");
         _clientSocket = serverSocket.Accept();
         Console.WriteLine("Simulation Connected!");
 
