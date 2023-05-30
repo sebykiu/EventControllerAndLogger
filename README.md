@@ -2,7 +2,7 @@
 
 Event Controller and Logger (ECAL) is a subpart of the [3D Unity Stack](https://github.com/skiunke/CrownetUnity) based on the [Crownet Project](https://crownet.org/).
 
-ECAL is completely optional as Crownet supports direct communication to Unity, but has some unique and helpful features.
+ECAL is completely optional as Omnet++ supports direct communication to Unity, but has some unique and helpful features.
 
 
 ## Installation
@@ -12,6 +12,9 @@ ECAL is completely optional as Crownet supports direct communication to Unity, b
 git clone https://github.com/skiunke/EventControllerAndLogger.git ecal
 ```
 ## Usage
+> ECAL runs inside the rovernet network and is therefore accessibly by accessing the corresponding docker name (ecal, influxdb)
+
+
 Verify the [Config](https://github.com/skiunke/EventControllerAndLogger/blob/main/EventControllerAndLogger/config.yaml) before running ECAL to change ip-addresses where needed or to disable / enable services.
 
 ```shell
