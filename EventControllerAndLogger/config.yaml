@@ -2,7 +2,7 @@ UseUnity: true
 UseCrownet: true
 UseInflux: true
 OmnetPort: 52123
-UnityAddr: 192.168.178.63
+UnityAddr: 127.0.0.1
 UnityPort: 28932
 InfluxAddr: influxdb
 InfluxPort: 8086
