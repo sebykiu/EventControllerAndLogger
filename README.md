@@ -16,6 +16,8 @@ Verify the [Config](https://github.com/skiunke/EventControllerAndLogger/blob/mai
 
 ```shell
 cd ecal
+# This will create and run images of ECAL and local influxdb 
+# see: https://github.com/skiunke/EventControllerAndLogger/blob/main/docker-compose.yaml
 bash run.sh
 ```
 
