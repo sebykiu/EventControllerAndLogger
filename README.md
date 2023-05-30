@@ -16,7 +16,7 @@ Verify the [Config](https://github.com/skiunke/EventControllerAndLogger/blob/mai
 
 ```shell
 cd ecal
-docker-compose up
+bash run.sh
 ```
 
 
