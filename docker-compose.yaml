@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  influxdb:
+    image: influxdb:2.7.1
+    restart: always
+    container_name: influxdb
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=admin
+      - DOCKER_INFLUXDB_INIT_PASSWORD=password
+      - DOCKER_INFLUXDB_INIT_ORG=rovernet
+      - DOCKER_INFLUXDB_INIT_BUCKET=crownet
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=secret-token
+    volumes:
+      - $PWD/data:/var/lib/influxdb2
+      - $PWD/config:/etc/influxdb2
+    ports:
+      - "8086:8086"
+    networks: 
+      - rovernet
+
+  ecal:
+    image: ecal_image:latest
+    container_name: ecal
+    networks:
+      - rovernet
+networks:
+  rovernet:
+    external: true
+
+volumes:
+  data_influxdb:

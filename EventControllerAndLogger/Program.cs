@@ -1,10 +1,10 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
-using EventControllerAndLogger;
 using EventControllerAndLogger.Controller;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Yaml;
 
+namespace EventControllerAndLogger;
 
 class Program
 {
@@ -15,9 +15,11 @@ class Program
         IConfiguration configuration = builder.Build();
         var appConfig = new AppConfig();
         configuration.Bind(appConfig);
-
-        new ECAL();
         
+        Console.WriteLine($"UseUnity: {appConfig.UseUnity}, UseCrownet: {appConfig.UseCrownet}, UseInflux: {appConfig.UseInflux}, OmnetPort: {appConfig.OmnetPort}, UnityAddr: {appConfig.UnityAddr}, UnityPort: {appConfig.UnityPort}, InfluxAddr: {appConfig.InfluxAddr}, InfluxPort: {appConfig.InfluxPort}");
+
+        
+        
+        var ecal = new ECAL(appConfig);
     }
 }
-

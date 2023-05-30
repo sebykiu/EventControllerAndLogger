@@ -11,45 +11,73 @@ namespace EventControllerAndLogger.Controller;
 public class ECAL
 {
 
-    private const int PORT = 12345;
     private  readonly IPAddress _ipAddress = IPAddress.Any;
     private Socket _clientSocket;
     private Thread _messageThread;
 
     private Socket unityClient;
     private InfluxDb _influxDb;
-    
-   // private InfluxDb _influxDb = new InfluxDb();
+
+    private AppConfig _appConfig;
 
 
-    public ECAL()
+    public ECAL(AppConfig appConfig)
     {
-        _influxDb = new();
-        unityClient = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-        var ep = new IPEndPoint(IPAddress.Parse("192.168.178.63"), 54321);
+        _appConfig = appConfig;
+        if (appConfig.UseCrownet)
+        {
+            Console.WriteLine("[Notification] Logging to InfluxDB enabled.");
 
-        try
-        {
-            unityClient.Connect(ep);
-            Console.WriteLine(unityClient.Connected);
+            _influxDb = new(appConfig.InfluxAddr, appConfig.InfluxPort);
         }
-        catch
+        else
         {
-           Console.Error.WriteLine(
-               "[Network Error]  Connection to Unity failed! Ignore this message, if only Logging to InfluxDB is required.");
+            Console.WriteLine("[Notification] Logging to InfluxDB disabled.");
         }
+
+        if (appConfig.UseUnity)
+        {
+            Console.WriteLine("[Notification] Exporting to Unity enabled.");
+
+            unityClient = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            
+            
+            Console.WriteLine($"UseUnity: {appConfig.UseUnity}, UseCrownet: {appConfig.UseCrownet}, UseInflux: {appConfig.UseInflux}, OmnetPort: {appConfig.OmnetPort}, UnityAddr: {appConfig.UnityAddr}, UnityPort: {appConfig.UnityPort}, InfluxAddr: {appConfig.InfluxAddr}, InfluxPort: {appConfig.InfluxPort}");
+
+            var ep = new IPEndPoint(IPAddress.Parse(appConfig.UnityAddr), appConfig.UnityPort);
+
+            try
+            {
+                unityClient.Connect(ep);
+                Console.WriteLine("[Notification] Successfully connected to Unity");
+                
+                
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
+        else
+        {
+            Console.WriteLine("[Notification] Exporting to Unity disabled.");
+
+        }
+
+
 
 
         var serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-        var endPoint = new IPEndPoint(_ipAddress, PORT);
-        serverSocket.Bind(endPoint);
+        
+        var endPoint = new IPEndPoint(_ipAddress, _appConfig.OmnetPort);
+            serverSocket.Bind(endPoint);
+
         serverSocket.Listen(1);
         Console.WriteLine("Waiting for Omnet++ Simulation to connect on Port: {}");
         _clientSocket = serverSocket.Accept();
         Console.WriteLine("Simulation Connected!");
 
 
-        Console.WriteLine(unityClient.Connected);
         _messageThread = new Thread(ReceiveData);
         _messageThread.Start();
         
@@ -96,7 +124,7 @@ public class ECAL
             var message = JsonConvert.DeserializeObject<Message>(response);
 
             Debug.Assert(message != null, nameof(message) + " != null");
-            Console.WriteLine("{0},{1},{2},{3},{4}", message.Id, message.Instruction, message.Coordinates.X, message.Coordinates.Y, message.Coordinates.Z);
+            Console.WriteLine("{0},{1},{2},{3},{4},{5}", message.Id, message.Path,message.Instruction, message.Coordinates.X, message.Coordinates.Y, message.Coordinates.Z);
             _influxDb.WriteToDatabase(message);
             
         }
