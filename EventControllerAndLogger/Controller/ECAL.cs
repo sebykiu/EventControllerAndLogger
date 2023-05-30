@@ -42,8 +42,6 @@ public class ECAL
             unityClient = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             
             
-            Console.WriteLine($"UseUnity: {appConfig.UseUnity}, UseCrownet: {appConfig.UseCrownet}, UseInflux: {appConfig.UseInflux}, OmnetPort: {appConfig.OmnetPort}, UnityAddr: {appConfig.UnityAddr}, UnityPort: {appConfig.UnityPort}, InfluxAddr: {appConfig.InfluxAddr}, InfluxPort: {appConfig.InfluxPort}");
-
             var ep = new IPEndPoint(IPAddress.Parse(appConfig.UnityAddr), appConfig.UnityPort);
 
             try
