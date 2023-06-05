@@ -23,6 +23,7 @@ public class ECAL
 
     public ECAL(AppConfig appConfig)
     {
+
         _appConfig = appConfig;
         if (appConfig.UseCrownet)
         {
@@ -53,7 +54,7 @@ public class ECAL
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"[Error] Unity is not reachable:  {ex.Message}");
             }
         }
         else
