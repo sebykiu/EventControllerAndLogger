@@ -22,6 +22,7 @@ services:
 
   ecal:
     image: ecal_image:latest
+    restart: always
     container_name: ecal
     networks:
       - rovernet
