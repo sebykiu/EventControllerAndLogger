@@ -72,9 +72,9 @@ public class ECAL
             serverSocket.Bind(endPoint);
 
         serverSocket.Listen(1);
-        Console.WriteLine("Waiting for Omnet++ Simulation to connect on Port: {}");
+        Console.WriteLine("[Notification] Waiting for Omnet++ Simulation to connect on Port: {0}", _appConfig.OmnetPort.ToString());
         _clientSocket = serverSocket.Accept();
-        Console.WriteLine("Simulation Connected!");
+        Console.WriteLine("[Notification] Omnet++ connected");
 
 
         _messageThread = new Thread(ReceiveData);
@@ -87,7 +87,7 @@ public class ECAL
 
     private void ReceiveData()
     {
-
+        int count = 0;
 
 
         while (true)
@@ -107,7 +107,7 @@ public class ECAL
 
             if (messageLength == 0)
             {
-                Console.WriteLine("Received empty message. Client is disconnected!");
+                Console.WriteLine("[Notification] Received empty message. Client is disconnected!");
                 break;
             }
 
@@ -116,6 +116,8 @@ public class ECAL
             var messageBuffer = new byte[messageLength];
             var received = _clientSocket.Receive(messageBuffer, SocketFlags.None);
 
+            count += 1;
+
             if (unityClient.Connected) unityClient.Send(messageBuffer);
 
             var response = Encoding.UTF8.GetString(messageBuffer, 0, received);
@@ -123,7 +125,7 @@ public class ECAL
             var message = JsonConvert.DeserializeObject<Message>(response);
 
             Debug.Assert(message != null, nameof(message) + " != null");
-            Console.WriteLine("{0},{1},{2},{3},{4},{5}", message.Id, message.Path,message.Instruction, message.Coordinates.X, message.Coordinates.Y, message.Coordinates.Z);
+            Console.WriteLine("[Notification] Count: {0} Deserialized: "+"{1},{2},{3},{4},{5},{6}", count,message.Id, message.Path,message.Instruction, message.Coordinates.X, message.Coordinates.Y, message.Coordinates.Z);
             _influxDb.WriteToDatabase(message);
             
         }

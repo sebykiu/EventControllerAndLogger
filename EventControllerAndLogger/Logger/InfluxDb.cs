@@ -40,7 +40,7 @@ public class InfluxDb
         using var writeApi = _client.GetWriteApi();
         writeApi.WritePoint(bucket: Bucket, org: Org, point: msg);
         
-        Console.WriteLine("Wrot to database");
+        Console.WriteLine("[Notification] Message logged to InfluxDB");
       
     }
 
