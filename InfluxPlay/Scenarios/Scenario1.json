@@ -1,0 +1,53 @@
+[
+  {
+    "Id": "1",
+    "Instruction": "createOrUpdatePerson",
+    "Coordinates": {
+      "X": 5.73973695928726,
+      "Y": 0.965280672702125,
+      "Z": 0.0
+    },
+    "Timestamp": "1"
+  },
+  {
+    "Id": "2",
+    "Instruction": "createOrUpdatePerson",
+    "Coordinates": {
+      "X": 5.28416608939793,
+      "Y": 0.870678201005239,
+      "Z": 0.0
+    },
+    "Timestamp": "2"
+  },
+  {
+    "Id": "3",
+    "Instruction": "createOrUpdatePerson",
+    "Coordinates": {
+      "X": 5.73973695928726,
+      "Y": 1.2246361173892808,
+      "Z": 0.0
+    },
+    "Timestamp": "3"
+  },
+  {
+    "Id": "1",
+    "Instruction": "createOrUpdatePerson",
+    "Coordinates": {
+      "X": 5.73973695928726,
+      "Y": 1.2246361173892808,
+      "Z": 0.0
+    },
+    "Timestamp": "4"
+  }
+  ,
+  {
+    "Id": "5",
+    "Instruction": "createOrUpdatePerson",
+    "Coordinates": {
+      "X": 5.73973695928726,
+      "Y": 1.2246361173892808,
+      "Z": 0.0
+    },
+    "Timestamp": "10"
+  }
+]
