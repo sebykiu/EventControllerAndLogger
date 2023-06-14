@@ -9,4 +9,4 @@ InfluxPort: 8086
 # Set a unique Tag to store messages in influxdb.
 # default = Messages will be saved in default tag accessible by querying time.
 # your-tag = Messages will be saved in your-tag accessible by querying your-tag.
-SpecificTag: Scenario1
+SpecificTag: default
