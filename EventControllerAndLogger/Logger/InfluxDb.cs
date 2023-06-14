@@ -16,25 +16,35 @@ public class InfluxDb
     private string _influxAddr;
     private int _influxPort;
     private InfluxDBClient _client;
+    private string _specificTag;
 
-    public InfluxDb(string influxAddr, int influxPort)
+    public InfluxDb(string influxAddr, int influxPort, string specificTag)
     
     
     {
         _client = InfluxDBClientFactory.Create("http://"+influxAddr+":" +influxPort, Token);
+        _specificTag = specificTag;
     }
 
     public void WriteToDatabase(Message message)
     {
-        
-        
-        var msg = PointData
-            .Measurement("omnet++")
-            .Field("Id", message.Id).Field("Path",message.Path).Field("Instruction", message.Instruction)
+        PointData msg = PointData.Measurement("omnet++")
+            .Field("Id", message.Id)
+            .Field("Path", message.Path)
+            .Field("Instruction", message.Instruction)
             .Field("X", message.Coordinates.X)
-            .Field("Y", message.Coordinates.Y).Field("Z", message.Coordinates.Z)
+            .Field("Y", message.Coordinates.Y)
+            .Field("Z", message.Coordinates.Z)
             .Timestamp(DateTime.UtcNow, WritePrecision.Ns);
-        
+
+        if (_specificTag != "default")
+        {
+            msg = msg.Tag("scenario", _specificTag);
+        }
+
+
+
+
 
 
         using var writeApi = _client.GetWriteApi();

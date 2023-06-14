@@ -29,7 +29,7 @@ public class ECAL
         {
             Console.WriteLine("[Notification] Logging to InfluxDB enabled.");
 
-            _influxDb = new(appConfig.InfluxAddr, appConfig.InfluxPort);
+            _influxDb = new(appConfig.InfluxAddr, appConfig.InfluxPort, appConfig.SpecificTag);
         }
         else
         {
@@ -87,14 +87,18 @@ public class ECAL
 
     private void ReceiveData()
     {
-        int count = 0;
+        Console.WriteLine("[Notification] Waiting to receive messages from Omnet++");
 
+        int count = 0;
 
         while (true)
         {
             
             var lengthBuffer = new byte[4];
             _clientSocket.Receive(lengthBuffer, SocketFlags.None);
+            
+            Console.WriteLine("[Notification] Received Message Length");
+
             
             if (unityClient.Connected) unityClient.Send(lengthBuffer);
 
@@ -115,6 +119,8 @@ public class ECAL
             
             var messageBuffer = new byte[messageLength];
             var received = _clientSocket.Receive(messageBuffer, SocketFlags.None);
+            Console.WriteLine("[Notification] Received Message Payload");
+
 
             count += 1;
 

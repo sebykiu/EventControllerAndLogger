@@ -1,8 +1,12 @@
 UseUnity: true
 UseCrownet: true
 UseInflux: true
-OmnetPort: 52123
-UnityAddr: 127.0.0.1
-UnityPort: 28932
+OmnetPort: 12345
+UnityAddr: 192.168.178.63
+UnityPort: 54321
 InfluxAddr: influxdb
 InfluxPort: 8086
+# Set a unique Tag to store messages in influxdb.
+# default = Messages will be saved in default tag accessible by querying time.
+# your-tag = Messages will be saved in your-tag accessible by querying your-tag.
+SpecificTag: Scenario1
