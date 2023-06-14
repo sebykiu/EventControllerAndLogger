@@ -33,11 +33,21 @@ By default ECAL loggs every message received to [InfluxDB](https://www.influxdat
 > > Username: admin <br>
 > > Password: password
 
-### 2. Unity of playback
-Use stored messages in InfluxDB or any other source to control unity to gain the following benefits:
-- Control playback speed
-- Select specific time frame
-- Disable / modify specific message
+### 2. InfluxPlay
+- Playback stored messages in InfluxDB from a specific scenario.
+- Speed up or slow down the playback.
+- Load custom scenarios from json files
+
+Run [run.py](https://github.com/skiunke/EventControllerAndLogger/blob/main/InfluxPlay/run.py) to execute Scenario1 by default.
+
+
+Supported Scenarios:
+
+| Name            	 | Description                                                               	|
+|-------------------|---------------------------------------------------------------------------	|
+| ConnectionTest  	 | Sends packet to Unity. On success a green message is displayed.    	|
+| Scenario2       	 | Creates a person, vehicle and stationary.                                 	|
+|  Scenario1       	 | Creates 3 persons and moves them to a different location after 5 seconds.       	|
 
 
 ### 3. Accelerated development
