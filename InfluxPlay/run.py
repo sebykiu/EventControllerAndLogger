@@ -3,7 +3,7 @@ import time
 import json
 import influxdb_client
 from json_object import Message, Coordinates
-
+import datetime
 
 
 # Custom encoder to support datetime and Message object
@@ -86,7 +86,7 @@ def retrieve_messages_from_influx(scenario, org, bucket):
 
 
 
-import datetime
+
 
 def send_message(ip, port, scenario, org, bucket, use_json = False, json_file=None):
     # Create a socket object
