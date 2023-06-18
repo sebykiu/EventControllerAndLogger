@@ -23,12 +23,13 @@ def retrieve_messages_from_json(filename):
 
     messages = []
     for record in data:
-        id = record.get('Id', None)
-        instruction = record.get('Instruction', None)
+        sourceId = record.get('SourceId', None)
+        targetId = record.get("TargetId")
+        objectType = record.get('ObjectType', None)
         coordinates = record.get('Coordinates', None)
         timestamp = record.get('Timestamp', None)
 
-        if id is not None and instruction is not None and coordinates is not None and timestamp is not None:
+        if sourceId is not None and objectType is not None and coordinates is not None and timestamp is not None:
             x = coordinates.get('X', None)
             y = coordinates.get('Y', None)
             z = coordinates.get('Z', None)
@@ -36,7 +37,7 @@ def retrieve_messages_from_json(filename):
 
             # Convert the timestamp from string to datetime
             timestamp = datetime.datetime.fromtimestamp(float(timestamp))
-            message = Message(id, instruction, coordinates, timestamp)
+            message = Message(sourceId,targetId, objectType, coordinates, timestamp)
             messages.append(message)
 
     return messages
@@ -66,17 +67,18 @@ def retrieve_messages_from_influx(scenario, org, bucket):
     for table in tables:
         print(f"Number of records in this table: {len(table.records)}")
         for record in table.records:
-            id = record.values.get('Id', None)
-            instruction = record.values.get('Instruction', None)
+            sourceId = record.values.get('SourceId', None)
+            targetId = record.values.get('TargetId', None)
+            objectType = record.values.get('ObjectType', None)
             x = record.values.get('X', None)
             y = record.values.get('Y', None)
             z = record.values.get('Z', None)
             timestamp = record.values.get('_time', None)
 
             # If all necessary fields are present, create a message
-            if id is not None and instruction is not None and x is not None and y is not None and z is not None:
+            if sourceId is not None and objectType is not None and x is not None and y is not None and z is not None:
                 coordinates = Coordinates(x, y, z)
-                message = Message(id, instruction, coordinates, scenario, timestamp)
+                message = Message(sourceId,targetId, objectType, coordinates, scenario, timestamp)
                 messages.append(message)
 
     return messages

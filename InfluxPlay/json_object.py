@@ -1,7 +1,8 @@
 class Message:
-    def __init__(self, id, instruction, coordinates, timestamp, scenario= None):
-        self.Id = id
-        self.Instruction = instruction
+    def __init__(self, id,targetId, objectType, coordinates, timestamp, scenario= None):
+        self.SourceId = id
+        self.TargetId = targetId
+        self.ObjectType = objectType
         self.Coordinates = coordinates
         self.Scenario = scenario
         self.Timestamp = timestamp
