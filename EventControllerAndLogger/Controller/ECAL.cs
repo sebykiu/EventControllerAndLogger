@@ -131,7 +131,7 @@ public class ECAL
             var message = JsonConvert.DeserializeObject<Message>(response);
 
             Debug.Assert(message != null, nameof(message) + " != null");
-            Console.WriteLine("[Notification] Count: {0} Deserialized: "+"{1},{2},{3},{4},{5},{6}", count,message.Id, message.Path,message.Instruction, message.Coordinates.X, message.Coordinates.Y, message.Coordinates.Z);
+            Console.WriteLine("[Notification] Count: {0} Deserialized: "+"SourceId: {1},TargetID: {2}, ObjectType:{3}, Coordinates: X:{4}, Y:{5}, Z:{6}", count,message.SourceId, message.TargetId,message.ObjectType, message.Coordinates.X, message.Coordinates.Y, message.Coordinates.Z);
             _influxDb.WriteToDatabase(message);
             
         }

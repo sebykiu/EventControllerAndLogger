@@ -2,9 +2,11 @@ namespace EventControllerAndLogger.Json;
 
 public class Message
 {
-    public string Id { get; set; }
+    public string SourceId { get; set; }
     
-    public string Path { get; set; }
-    public string Instruction { get; set; }
+    public string TargetId { get; set; }
+
     public Coordinates Coordinates { get; set; }
+   
+    public string ObjectType { get; set; }
 }
