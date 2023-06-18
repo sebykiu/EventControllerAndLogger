@@ -29,9 +29,9 @@ public class InfluxDb
     public void WriteToDatabase(Message message)
     {
         PointData msg = PointData.Measurement("omnet++")
-            .Field("Id", message.Id)
-            .Field("Path", message.Path)
-            .Field("Instruction", message.Instruction)
+            .Field("SourceId", message.SourceId)
+            .Field("TargetId", message.TargetId)
+            .Field("ObjectType", message.ObjectType)
             .Field("X", message.Coordinates.X)
             .Field("Y", message.Coordinates.Y)
             .Field("Z", message.Coordinates.Z)
