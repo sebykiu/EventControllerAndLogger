@@ -45,16 +45,22 @@ public class ECAL
             
             var ep = new IPEndPoint(IPAddress.Parse(appConfig.UnityAddr), appConfig.UnityPort);
 
-            try
+            
+            
+            while (true)
             {
-                unityClient.Connect(ep);
-                Console.WriteLine("[Notification] Successfully connected to Unity");
-                
-                
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"[Error] Unity is not reachable:  {ex.Message}");
+                try
+                {
+                    unityClient.Connect(ep);
+                    Console.WriteLine("[Notification] Successfully connected to Unity");
+                    break; // Connection successful, exit loop
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"[Error] Unity is not reachable: {ex.Message}. Retry in 5 seconds.");
+                  Thread.Sleep(5000);
+                    // After the delay, the loop will repeat and attempt to connect again
+                }
             }
         }
         else

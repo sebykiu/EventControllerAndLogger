@@ -147,11 +147,11 @@ def send_message(ip, port, scenario, org, bucket, use_json = False, json_file=No
 # Set the IP address, port, scenario name, org, and bucket
 ip_address = "192.168.178.63"  
 port = 54321  
-scenario_name = "Scenario1"  
+scenario_name = "test"  
 org = 'rovernet'
 bucket = 'crownet'
 use_json = True
-json_path = 'Scenarios/Scenario1.json'
+json_path = 'Scenarios/EasyPacket.json'
 
 # Call the send_message function with the specified parameters
 send_message(ip_address, port, scenario_name, org, bucket,use_json, json_path)
