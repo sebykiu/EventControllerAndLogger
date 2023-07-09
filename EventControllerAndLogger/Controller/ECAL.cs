@@ -106,7 +106,7 @@ public class ECAL
             Console.WriteLine("[Notification] Received Message Length");
 
             
-            if (unityClient.Connected) unityClient.Send(lengthBuffer);
+            if (_appConfig.UseUnity && unityClient.Connected) unityClient.Send(lengthBuffer);
 
             if (BitConverter.IsLittleEndian)
             {
@@ -130,7 +130,7 @@ public class ECAL
 
             count += 1;
 
-            if (unityClient.Connected) unityClient.Send(messageBuffer);
+            if (_appConfig.UseUnity && unityClient.Connected) unityClient.Send(messageBuffer);
 
             var response = Encoding.UTF8.GetString(messageBuffer, 0, received);
 

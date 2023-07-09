@@ -1,0 +1,102 @@
+[
+  {
+    "SourceId": "pNode[0]",
+    "TargetId": "",
+    "ObjectType": "person",
+    "Coordinates": {
+      "X": 5.739736959287258,
+      "Y": 0.965280672702125,
+      "Z": 0.0
+    },
+    "Timestamp": "1"
+  },
+  {
+    "SourceId": "pNode[0]",
+    "TargetId": "",
+    "ObjectType": "person",
+    "Coordinates": {
+      "X": 4.9474658657946975,
+      "Y": 0.870678201005239,
+      "Z": 0.0
+    },
+    "Timestamp": "5"
+  },
+  {
+    "SourceId": "pNode[0]",
+    "TargetId": "",
+    "ObjectType": "person",
+    "Coordinates": {
+      "X": 5.28416608939793,
+      "Y": 1.2246361173892808,
+      "Z": 0.0
+    },
+    "Timestamp": "10"
+  }
+  ,
+  {
+    "SourceId": "pNode[0]",
+    "TargetId": "",
+    "ObjectType": "person",
+    "Coordinates": {
+      "X": 5.38416608939793,
+      "Y": 1.4246361173892808,
+      "Z": 0.0
+    },
+    "Timestamp": "15"
+  },
+    {
+    "SourceId": "pNode[0]",
+    "TargetId": "",
+    "ObjectType": "person",
+    "Coordinates": {
+      "X": 6.68416608939793,
+      "Y": 1.8246361173892808,
+      "Z": 0.0
+    },
+    "Timestamp": "20"
+  },
+  {
+    "SourceId": "pNode[1]",
+    "TargetId": "",
+    "ObjectType": "person",
+    "Coordinates": {
+      "X": 7.68416608939793,
+      "Y": 2.8246361173892808,
+      "Z": 0.0
+    },
+    "Timestamp": "20"
+  },
+{
+    "SourceId": "TEST2",
+    "TargetId": "",
+    "ObjectType": "person",
+    "Coordinates": {
+      "X": -2.027781,
+      "Y": 10.00204,
+      "Z": 0.0
+    },
+    "Timestamp": "20"
+  },
+  {
+    "SourceId": "TEST1",
+    "TargetId": "",
+    "ObjectType": "person",
+    "Coordinates": {
+      "X": -3.346817,
+      "Y": 9.974895,
+      "Z": 0.0
+    },
+    "Timestamp": "20"
+  },
+  {
+    "SourceId": "TEST2",
+    "TargetId": "TEST1",
+    "ObjectType": "packet",
+    "Coordinates": {
+      "X": 0.0,
+      "Y": 0.0,
+      "Z": 0.0
+    },
+    "Timestamp": "25"
+  } 
+]

@@ -1,0 +1,32 @@
+[{"SourceId": "TEST2",
+"TargetId": "",
+"ObjectType": "person",
+"Coordinates": {
+  "X": -2.027781,
+  "Y": 10.00204,
+  "Z": 0.0
+},
+"Timestamp": "0"
+},
+{
+"SourceId": "TEST1",
+"TargetId": "",
+"ObjectType": "person",
+"Coordinates": {
+  "X": -3.346817,
+  "Y": 9.974895,
+  "Z": 0.0
+},
+"Timestamp": "0"
+},
+{
+"SourceId": "TEST2",
+"TargetId": "TEST1",
+"ObjectType": "packet",
+"Coordinates": {
+  "X": 0.0,
+  "Y": 0.0,
+  "Z": 0.0
+},
+"Timestamp": "3"
+} ]
