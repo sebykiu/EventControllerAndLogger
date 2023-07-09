@@ -76,11 +76,10 @@ def retrieve_messages_from_influx(scenario, org, bucket):
             timestamp = record.values.get('_time', None)
 
             # If all necessary fields are present, create a message
-            if sourceId is not None and objectType is not None and x is not None and y is not None and z is not None:
+            if sourceId is not None and objectType is not None and x is not None and y is not None and z is not None and timestamp is not None:
                 coordinates = Coordinates(x, y, z)
-                message = Message(sourceId,targetId, objectType, coordinates, scenario, timestamp)
+                message = Message(sourceId,targetId, objectType, coordinates,  timestamp,scenario,)
                 messages.append(message)
-
     return messages
 
 
@@ -95,7 +94,7 @@ def send_message(ip, port, scenario, org, bucket, use_json = False, json_file=No
     # Connect to the server
     client_socket.connect((ip, port))
     print("Connected to the server.")
-
+    print("Loading messages.")
     # Retrieve messages from InfluxDB for the specified scenario or from a JSON file
     if use_json:
         if json_file is None:
@@ -105,7 +104,9 @@ def send_message(ip, port, scenario, org, bucket, use_json = False, json_file=No
     else:
         messages = retrieve_messages_from_influx(scenario, org, bucket)
 
-    print(len(messages))
+    print("Loaded {}".format(len(messages)))
+
+  
 
     # If there are no messages, close the socket and return
     if not messages:
@@ -121,6 +122,11 @@ def send_message(ip, port, scenario, org, bucket, use_json = False, json_file=No
         if i == 0:  
             time_diff = 0
         else:
+
+            #print(message.Timestamp)
+            #print(message.Timestamp[i-1].Timestamp)
+            #print(message.Timestamp).total_seconds()
+            #print(message.Timestamp[i-1].Timestamp).total_seconds()
             time_diff = (message.Timestamp - messages[i-1].Timestamp).total_seconds()  
 
         # Convert the message to JSON using the custom encoder
@@ -151,7 +157,7 @@ scenario_name = "test"
 org = 'rovernet'
 bucket = 'crownet'
 use_json = True
-json_path = 'Scenarios/EasyPacket.json'
+json_path = 'Scenarios/TwoPersonMovingWithPacket.json'
 
 # Call the send_message function with the specified parameters
 send_message(ip_address, port, scenario_name, org, bucket,use_json, json_path)
