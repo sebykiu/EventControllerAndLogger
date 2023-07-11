@@ -7,7 +7,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="efe72625-80b3-4b0f-82a1-9785f9bb5b4c" name="Changes" comment="added influxDB data and fixed time conversion error">
+    <list default="true" id="efe72625-80b3-4b0f-82a1-9785f9bb5b4c" name="Changes" comment="hotfixed no unity use and added new scenario in db">
       <change afterPath="$PROJECT_DIR$/InfluxPlay/Scenarios/EasyPacket.json" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/InfluxPlay/Scenarios/TwoPersonMovingWithPacket.json" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/data/engine/data/55c5a6be634e7ea5/_series/00/0000" afterDir="false" />
@@ -126,6 +126,7 @@
       <change afterPath="$PROJECT_DIR$/data/influxd.bolt" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/data/influxd.sqlite" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.EventControllerAndLogger/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.EventControllerAndLogger/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EventControllerAndLogger/Controller/ECAL.cs" beforeDir="false" afterPath="$PROJECT_DIR$/EventControllerAndLogger/Controller/ECAL.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/EventControllerAndLogger/config.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/EventControllerAndLogger/config.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -251,6 +252,7 @@
       <workItem from="1687087358490" duration="440000" />
       <workItem from="1688507882327" duration="669000" />
       <workItem from="1688892289890" duration="1402000" />
+      <workItem from="1688907623509" duration="575000" />
     </task>
     <task id="LOCAL-00001" summary="Added Docker &amp; conditional functionality">
       <created>1685473942250</created>
@@ -407,7 +409,15 @@
       <option name="project" value="LOCAL" />
       <updated>1688892349717</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="hotfixed no unity use and added new scenario in db">
+      <option name="closed" value="true" />
+      <created>1688908198162</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1688908198162</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -437,6 +447,7 @@
     <MESSAGE value="moved import" />
     <MESSAGE value="added automatic retry and more Scenarios" />
     <MESSAGE value="added influxDB data and fixed time conversion error" />
-    <option name="LAST_COMMIT_MESSAGE" value="added influxDB data and fixed time conversion error" />
+    <MESSAGE value="hotfixed no unity use and added new scenario in db" />
+    <option name="LAST_COMMIT_MESSAGE" value="hotfixed no unity use and added new scenario in db" />
   </component>
 </project>
