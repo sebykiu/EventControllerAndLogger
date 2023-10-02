@@ -51,7 +51,7 @@ def retrieve_messages_from_influx(scenario, org, bucket):
 
     # InfluxDB query to load values for specific scenario and pivot them together for them to be returned in one column
     query = f'from(bucket: "{bucket}") \
-        |> range(start: 0) \
+        |> range(start: 1688234705) \
         |> filter(fn: (r) => r._measurement == "omnet++" and r.scenario == "{scenario}") \
         |> pivot(rowKey:["_time"], columnKey: ["_field"], valueColumn: "_value") \
         |> sort(columns: ["_time"])'
@@ -127,7 +127,7 @@ def send_message(ip, port, scenario, org, bucket, use_json = False, json_file=No
             #print(message.Timestamp[i-1].Timestamp)
             #print(message.Timestamp).total_seconds()
             #print(message.Timestamp[i-1].Timestamp).total_seconds()
-            time_diff = (message.Timestamp - messages[i-1].Timestamp).total_seconds()  
+            time_diff = (message.Timestamp - messages[i-1].Timestamp).total_seconds()
 
         # Convert the message to JSON using the custom encoder
         message_json = json.dumps(message, cls=CustomEncoder)
@@ -151,13 +151,13 @@ def send_message(ip, port, scenario, org, bucket, use_json = False, json_file=No
 
 
 # Set the IP address, port, scenario name, org, and bucket
-ip_address = "192.168.178.63"  
+ip_address = "localhost"  
 port = 54321  
 scenario_name = "vruMec"  
 org = 'rovernet'
 bucket = 'crownet'
-use_json = False
-json_path = 'Scenarios/TwoPersonMovingWithPacket.json'
+use_json = True
+json_path = 'Scenarios/Freiheit.json'
 
 # Call the send_message function with the specified parameters
 send_message(ip_address, port, scenario_name, org, bucket,use_json, json_path)
