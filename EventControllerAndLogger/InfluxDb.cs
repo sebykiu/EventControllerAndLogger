@@ -3,9 +3,7 @@ using InfluxDB.Client;
 using InfluxDB.Client.Api.Domain;
 using InfluxDB.Client.Writes;
 
-namespace EventControllerAndLogger.Logger;
-
-
+namespace EventControllerAndLogger;
 
 public class InfluxDb
 {
@@ -13,16 +11,14 @@ public class InfluxDb
     const string Bucket = "crownet";
     const string Org = "rovernet";
 
-    private string _influxAddr;
-    private int _influxPort;
-    private InfluxDBClient _client;
-    private string _specificTag;
+    private readonly InfluxDBClient _client;
+    private readonly string _specificTag;
 
     public InfluxDb(string influxAddr, int influxPort, string specificTag)
-    
-    
+
+
     {
-        _client = InfluxDBClientFactory.Create("http://"+influxAddr+":" +influxPort, Token);
+        _client = new InfluxDBClient($"http://{influxAddr}:{influxPort}", Token);
         _specificTag = specificTag;
     }
 
@@ -42,16 +38,9 @@ public class InfluxDb
             msg = msg.Tag("scenario", _specificTag);
         }
 
-
-
-
-
-
         using var writeApi = _client.GetWriteApi();
         writeApi.WritePoint(bucket: Bucket, org: Org, point: msg);
-        
-        Console.WriteLine("[Notification] Message logged to InfluxDB");
-      
-    }
 
+        Console.WriteLine("[Notification] Message logged to InfluxDB");
+    }
 }
