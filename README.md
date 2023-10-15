@@ -38,7 +38,6 @@ Messages stored in the InfluxDB database or in JSON files are played back to Uni
 ```shell
 # /ecal/InfluxPlay
 pip3 install -r requirements.txt
-python3 run.py
 ```
 
 ### Usage
