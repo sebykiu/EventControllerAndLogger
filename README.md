@@ -1,55 +1,64 @@
-# EventControllerAndLogger
+# Event Controller and Logger (ECAL)
 
-Event Controller and Logger (ECAL) is a subpart of the [3D Unity Stack](https://github.com/skiunke/CrownetUnity) based on the [Crownet Project](https://crownet.org/).
+ECAL is a subpart of the [3D Unity Stack](https://github.com/skiunke/CrownetUnity) based on [CrowNet](https://crownet.org/) and
+enables message logging to a local InfluxDB instance, that can later be played back to Unity with InfluxPlay. Alternatively JSON files are used.
 
-ECAL is completely optional as Omnet++ supports direct communication to Unity, but has some unique and helpful features.
-
-
-## Installation
-
+### Installation
 
 ```shell
 git clone https://github.com/skiunke/EventControllerAndLogger.git ecal
 ```
-## Usage
-> ECAL runs inside the rovernet network and is therefore accessibly by accessing the corresponding docker name (ecal, influxdb)
 
+### Usage
 
-Verify the [Config](https://github.com/skiunke/EventControllerAndLogger/blob/main/EventControllerAndLogger/config.yaml) before running ECAL to change ip-addresses where needed or to disable / enable services.
+> ⚠️ The containers must run for both recording and InfluxPlay as it deploys the InfluxDB instance.
+
+Builds a local InfluxDB instance and the ECAL C# project in the same docker network as OMNeT++ and therefore allows accessing by
+the corresponding docker name (ecal, influxdb).
 
 ```shell
-cd ecal
-# This will create and run images of ECAL and local influxdb 
-# see: https://github.com/skiunke/EventControllerAndLogger/blob/main/docker-compose.yaml
-bash run.sh
+# /ecal
+bash build.sh
 ```
 
+By default ECAL only records and does not forward to Unity automatically. The default ports and settings can be viewed and changed in the
+[Config](https://github.com/skiunke/EventControllerAndLogger/blob/main/EventControllerAndLogger/config.yaml).
 
-### 1. Precise InfluxDB logging
-By default ECAL loggs every message received to [InfluxDB](https://www.influxdata.com/) a time-series database.
 
-
-> Data can be viewed and queried under: https://localhost:8086
+> InfluxDB is locally accessible under: https://localhost:8086
 > > Username: admin <br>
 > > Password: password
 
-### 2. InfluxPlay
-- Playback stored messages in InfluxDB from a specific scenario.
-- Speed up or slow down the playback.
-- Load custom scenarios from json files
+## Message Playback
 
-Run [run.py](https://github.com/skiunke/EventControllerAndLogger/blob/main/InfluxPlay/run.py) to execute Scenario1 by default.
+Messages stored in the InfluxDB database or in JSON files are played back to Unity with the InfluxPlay package.
 
+### Installation
 
-Supported Scenarios:
+```shell
+# /ecal/InfluxPlay
+pip3 install -r requirements.txt
+python3 run.py
+```
 
-| Name            	 | Description                                                               	|
-|-------------------|---------------------------------------------------------------------------	|
-| ConnectionTest  	 | Sends packet to Unity. On success a green message is displayed.    	|
-| Scenario2       	 | Creates a person, vehicle and stationary.                                 	|
-|  Scenario1       	 | Creates 3 persons and moves them to a different location after 5 seconds.       	|
+### Usage
 
+> ⚠️ Both ECAL and Unity must be running before executing the scenario.
 
-### 3. Accelerated development
+To execute a default testing scenario:
 
-Change the functionality in ECAL and rebuild the docker images instead of recompiling the whole Omnet++ simulation.
+```shell
+python3 run.py
+```
+
+To execute another JSON Scenario:
+
+```shell
+python3 run.py --ip localhost --port 54321 --use-json --json-path Scenarios/Freiheit.json
+```
+
+To execute a Scenario from InfluxDB:
+
+```shell
+python3 run.py --ip localhost --port 54321 --scenario vruMec 
+```
