@@ -42,8 +42,7 @@
       "Z": 1.050009
     },
     "Timestamp": "0"
-  }
-,
+  },
   {
     "SourceId": "Person05",
     "TargetId": "",
@@ -54,8 +53,18 @@
       "Z": 1.050009
     },
     "Timestamp": "0"
-  }
-,
+  },
+  {
+    "SourceId": "Person06",
+    "TargetId": "",
+    "ObjectType": "person",
+    "Coordinates": {
+      "X": 144.6674,
+      "Y": 114.7704,
+      "Z": 1.050009
+    },
+    "Timestamp": "6"
+  },
   {
     "SourceId": "Person01",
     "TargetId": "Person02",
@@ -65,9 +74,8 @@
       "Y": 141.5397,
       "Z": 1.050009
     },
-    "Timestamp": "1"
-  }
-,
+    "Timestamp": "7"
+  },
   {
     "SourceId": "Person03",
     "TargetId": "Person04",
@@ -77,18 +85,40 @@
       "Y": 141.5397,
       "Z": 1.050009
     },
-    "Timestamp": "2"
-  }
-,
+    "Timestamp": "8"
+  },
   {
-    "SourceId": "Person02",
-    "TargetId": "Person03",
+    "SourceId": "Person04",
+    "TargetId": "Person05",
     "ObjectType": "packet",
     "Coordinates": {
       "X": 153.9428,
       "Y": 141.5397,
       "Z": 1.050009
     },
-    "Timestamp": "3"
+    "Timestamp": "9"
+  },
+  {
+    "SourceId": "Person05",
+    "TargetId": "Person06",
+    "ObjectType": "packet",
+    "Coordinates": {
+      "X": 153.9428,
+      "Y": 141.5397,
+      "Z": 1.050009
+    },
+    "Timestamp": "10"
+  }
+,
+  {
+    "SourceId": "Person06",
+    "TargetId": "Person01",
+    "ObjectType": "packet",
+    "Coordinates": {
+      "X": 153.9428,
+      "Y": 141.5397,
+      "Z": 1.050009
+    },
+    "Timestamp": "11"
   }
 ]
