@@ -53,7 +53,7 @@ python3 run.py
 To execute another JSON Scenario:
 
 ```shell
-python3 run.py --ip localhost --port 54321 --use-json --json-path Scenarios/Freiheit.json
+python3 run.py --ip localhost --port 54321 --json-path Scenarios/Freiheit.json
 ```
 
 To execute a Scenario from InfluxDB:
