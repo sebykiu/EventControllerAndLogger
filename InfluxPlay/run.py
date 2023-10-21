@@ -84,7 +84,7 @@ def retrieve_messages_from_influx(scenario, org, bucket):
     return messages
 
 
-def send_message(ip, port, scenario, org, bucket, use_json=False, json_file=None):
+def send_message(ip, port, scenario, org, bucket, json_path=None):
     # Create a socket object
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -93,11 +93,8 @@ def send_message(ip, port, scenario, org, bucket, use_json=False, json_file=None
     print("Connected to the server.")
     print("Loading messages.")
     # Retrieve messages from InfluxDB for the specified scenario or from a JSON file
-    if use_json:
-        if json_file is None:
-            print("No JSON file specified.")
-            return
-        messages = retrieve_messages_from_json(json_file)
+    if json_path:
+        messages = retrieve_messages_from_json(json_path)
     else:
         messages = retrieve_messages_from_influx(scenario, org, bucket)
 
@@ -147,11 +144,10 @@ if __name__ == "__main__":
     parser.add_argument("--scenario", type=str, default="default", help="Scenario name")
     parser.add_argument("--org", type=str, default="rovernet", help="Organization")
     parser.add_argument("--bucket", type=str, default="crownet", help="Bucket")
-    parser.add_argument("--use-json", action="store_true", help="Use JSON format")
     parser.add_argument("--json-path", type=str, default="Scenarios/Freiheit.json", help="Path to JSON file")
 
     # Parse the command-line arguments
     args = parser.parse_args()
 
     # Call the send_message function with the specified arguments
-    send_message(args.ip, args.port, args.scenario, args.org, args.bucket, args.use_json, args.json_path)
+    send_message(args.ip, args.port, args.scenario, args.org, args.bucket, args.json_path)
