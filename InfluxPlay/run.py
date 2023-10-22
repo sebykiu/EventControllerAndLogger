@@ -5,6 +5,7 @@ import influxdb_client
 from json_object import Message, Coordinates
 import datetime
 import argparse
+import subprocess
 
 
 # Custom encoder to support datetime and Message object
@@ -25,13 +26,13 @@ def retrieve_messages_from_json(filename):
 
     messages = []
     for record in data:
-        sourceId = record.get('SourceId', None)
-        targetId = record.get("TargetId")
-        objectType = record.get('ObjectType', None)
+        source_id = record.get('SourceId', None)
+        target_id = record.get("TargetId")
+        object_type = record.get('ObjectType', None)
         coordinates = record.get('Coordinates', None)
         timestamp = record.get('Timestamp', None)
 
-        if sourceId is not None and objectType is not None and coordinates is not None and timestamp is not None:
+        if source_id is not None and object_type is not None and coordinates is not None and timestamp is not None:
             x = coordinates.get('X', None)
             y = coordinates.get('Y', None)
             z = coordinates.get('Z', None)
@@ -39,7 +40,7 @@ def retrieve_messages_from_json(filename):
 
             # Convert the timestamp from string to datetime
             timestamp = datetime.datetime.fromtimestamp(float(timestamp))
-            message = Message(sourceId, targetId, objectType, coordinates, timestamp)
+            message = Message(source_id, target_id, object_type, coordinates, timestamp)
             messages.append(message)
 
     return messages
@@ -68,18 +69,18 @@ def retrieve_messages_from_influx(scenario, org, bucket):
     for table in tables:
         print(f"Number of records in this table: {len(table.records)}")
         for record in table.records:
-            sourceId = record.values.get('SourceId', None)
-            targetId = record.values.get('TargetId', None)
-            objectType = record.values.get('ObjectType', None)
+            source_id = record.values.get('SourceId', None)
+            target_id = record.values.get('TargetId', None)
+            object_type = record.values.get('ObjectType', None)
             x = record.values.get('X', None)
             y = record.values.get('Y', None)
             z = record.values.get('Z', None)
             timestamp = record.values.get('_time', None)
 
             # If all necessary fields are present, create a message
-            if sourceId is not None and objectType is not None and x is not None and y is not None and z is not None and timestamp is not None:
+            if source_id is not None and object_type is not None and x is not None and y is not None and z is not None and timestamp is not None:
                 coordinates = Coordinates(x, y, z)
-                message = Message(sourceId, targetId, objectType, coordinates, timestamp, scenario, )
+                message = Message(source_id, target_id, object_type, coordinates, timestamp, scenario)
                 messages.append(message)
     return messages
 
@@ -135,19 +136,32 @@ def send_message(ip, port, scenario, org, bucket, json_path=None):
 
 
 if __name__ == "__main__":
+    # Check if InfluxDB container is running
+    influxdb_check_cmd = 'docker ps --format "{{.Names}}" | grep -q "^influxdb$"'
+    if subprocess.call(influxdb_check_cmd, shell=True) == 0:
+        print("InfluxDB is running!")
+    else:
+        print("InfluxDB is NOT running. Did you run bash build_and_run.sh?")
+        exit(1)
     # Create an argument parser
-    parser = argparse.ArgumentParser(description="Send a message with specific parameters")
+    parser = argparse.ArgumentParser(description="Load a scenario from InfluxDB or JSON and send the messages to Unity")
 
     # Define command-line arguments
-    parser.add_argument("--ip", type=str, default="localhost", help="IP address")
-    parser.add_argument("--port", type=int, default=54321, help="Port")
-    parser.add_argument("--scenario", type=str, default="default", help="Scenario name")
-    parser.add_argument("--org", type=str, default="rovernet", help="Organization")
-    parser.add_argument("--bucket", type=str, default="crownet", help="Bucket")
-    parser.add_argument("--json-path", type=str, default="Scenarios/Freiheit.json", help="Path to JSON file")
+    parser.add_argument("--ip", type=str, default="localhost", help="Unity Address (default: localhost)")
+    parser.add_argument("--port", type=int, default=54321, help="Unity Port (default: 54321)")
+    parser.add_argument("--org", type=str, default="rovernet", help="InfluxDB Organisation (default: rovernet)")
+    parser.add_argument("--bucket", type=str, default="crownet", help="InfluxDB Bucket (default: crownet)")
+    group = parser.add_argument_group("only one of this Arguments must be set:")
+    group.add_argument("--scenario", type=str, help="InfluxDB Scenario Name")
+    group.add_argument("--json-path", type=str, help="JSON path")
+    parser.add_argument("--debug", action="store_true", default=False, help="Log time difference of messages to console (default: False)")
 
-    # Parse the command-line arguments
-    args = parser.parse_args()
+# Parse the command-line arguments
+args = parser.parse_args()
 
-    # Call the send_message function with the specified arguments
-    send_message(args.ip, args.port, args.scenario, args.org, args.bucket, args.json_path)
+# Check that either scenario or json-path is provided, but not both
+if not (args.scenario is None) ^ (args.json_path is None):
+    parser.error("Please provide either --scenario or --json-path, but not both.")
+
+# Call the send_message function with the specified arguments
+send_message(args.ip, args.port, args.scenario, args.org, args.bucket, args.json_path)
