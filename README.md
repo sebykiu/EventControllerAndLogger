@@ -1,6 +1,6 @@
 # Event Controller and Logger (ECAL)
 
-> > ⚠️ This project is designed to only run in a local network and therefore doesn't provide advanced security features.<br>
+> ⚠️ This project is designed to only run in a local network and therefore doesn't provide advanced security features.<br>
 
 
 ECAL is a subpart of the [GitHub - 3D Unity Stack](https://github.com/skiunke/CrownetUnity) based on [CrowNet](https://crownet.org/) and
