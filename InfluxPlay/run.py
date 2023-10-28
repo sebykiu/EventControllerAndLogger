@@ -1,4 +1,5 @@
 import socket
+import threading
 import time
 import json
 import influxdb_client
@@ -18,19 +19,35 @@ def default(obj):
         return obj.__dict__
     elif isinstance(obj, datetime.datetime):
         return obj.isoformat()
-    return super().default(obj)
+    return json.JSONEncoder.default(obj)
 
 
 class CustomEncoder(json.JSONEncoder):
-    @staticmethod
-    def default(obj):
+    def default(self, obj):
         return default(obj)
 
 
-def retrieve_messages(data_source, scenario=None, org=None, bucket=None, json_path=None, start_time=0):
+def update_time_control_constant():
+    # Allows the waiting time between messages to be manipulated by the user.
+
+    global time_control_constant
+
+    while True:
+        updated_constant = input("Enter the new time multiplication factor: ")
+        try:
+            time_control_constant = float(updated_constant)
+        except ValueError:
+            print("Please enter a valid number: ")
+
+
+def retrieve_messages(
+    data_source, scenario=None, org=None, bucket=None, json_path=None, start_time=0
+):
     if data_source == "influx":
         # Create an InfluxDB client
-        client = influxdb_client.InfluxDBClient(url='http://localhost:8086', token='secret-token', org=org)
+        client = influxdb_client.InfluxDBClient(
+            url="http://localhost:8086", token="secret-token", org=org
+        )
         query_api = client.query_api()
 
         # InfluxDB query to load values for specific scenario and pivot them together for them to be returned in one column
@@ -51,40 +68,61 @@ def retrieve_messages(data_source, scenario=None, org=None, bucket=None, json_pa
         for table in tables:
             print(f"Number of records in this table: {len(table.records)}")
             for record in table.records:
-                source_id = record.values.get('SourceId', None)
-                target_id = record.values.get('TargetId', None)
-                object_type = record.values.get('ObjectType', None)
-                x = record.values.get('X', None)
-                y = record.values.get('Y', None)
-                z = record.values.get('Z', None)
-                timestamp = record.values.get('_time', None)
+                source_id = record.values.get("SourceId", None)
+                target_id = record.values.get("TargetId", None)
+                object_type = record.values.get("ObjectType", None)
+                x = record.values.get("X", None)
+                y = record.values.get("Y", None)
+                z = record.values.get("Z", None)
+                timestamp = record.values.get("_time", None)
 
                 # If all necessary fields are present, create a message
-                if source_id is not None and object_type is not None and x is not None and y is not None and z is not None and timestamp is not None:
+                if (
+                    source_id is not None
+                    and object_type is not None
+                    and x is not None
+                    and y is not None
+                    and z is not None
+                    and timestamp is not None
+                ):
                     coordinates = Coordinates(x, y, z)
-                    message = Message(source_id, target_id, object_type, coordinates, timestamp, scenario)
+                    message = Message(
+                        source_id,
+                        target_id,
+                        object_type,
+                        coordinates,
+                        timestamp,
+                        scenario,
+                    )
                     messages.append(message)
     elif data_source == "json":
-        with open(json_path, 'r') as f:
+        with open(json_path, "r") as f:
             data = json.load(f)
 
         messages = []
         for record in data:
-            source_id = record.get('SourceId', None)
+            source_id = record.get("SourceId", None)
             target_id = record.get("TargetId")
-            object_type = record.get('ObjectType', None)
-            coordinates = record.get('Coordinates', None)
-            timestamp = record.get('Timestamp', None)
+            object_type = record.get("ObjectType", None)
+            coordinates = record.get("Coordinates", None)
+            timestamp = record.get("Timestamp", None)
 
-            if source_id is not None and object_type is not None and coordinates is not None and timestamp is not None:
-                x = coordinates.get('X', None)
-                y = coordinates.get('Y', None)
-                z = coordinates.get('Z', None)
+            if (
+                source_id is not None
+                and object_type is not None
+                and coordinates is not None
+                and timestamp is not None
+            ):
+                x = coordinates.get("X", None)
+                y = coordinates.get("Y", None)
+                z = coordinates.get("Z", None)
                 coordinates = Coordinates(x, y, z)
 
                 # Convert the timestamp from string to datetime
                 timestamp = datetime.datetime.fromtimestamp(float(timestamp))
-                message = Message(source_id, target_id, object_type, coordinates, timestamp)
+                message = Message(
+                    source_id, target_id, object_type, coordinates, timestamp
+                )
                 messages.append(message)
 
     return messages
@@ -100,7 +138,9 @@ def send_message_json(client_socket, message_json):
     client_socket.sendall(message_json.encode())
 
 
-def send_message(ip, port, scenario, org, bucket, start_time, json_path=None, debug=False):
+def send_message(
+    ip, port, scenario, org, bucket, start_time, json_path=None, debug=False
+):
     # Create a socket object
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -127,14 +167,15 @@ def send_message(ip, port, scenario, org, bucket, start_time, json_path=None, de
         if i == 0:
             time_diff = 0
         else:
-
-            time_diff = (message.Timestamp - messages[i - 1].Timestamp).total_seconds()
+            time_diff = (
+                message.Timestamp - messages[i - 1].Timestamp
+            ).total_seconds() * time_control_constant
 
         # Convert the message to JSON using the custom encoder
         message_json = json.dumps(message, cls=CustomEncoder)
 
         # Calculate the length of the encoded message and convert it to bytes
-        message_length = len(message_json.encode()).to_bytes(4, byteorder='big')
+        message_length = len(message_json.encode()).to_bytes(4, byteorder="big")
 
         # Send the length of the message to the server
         send_message_length(client_socket, message_length)
@@ -143,8 +184,8 @@ def send_message(ip, port, scenario, org, bucket, start_time, json_path=None, de
         send_message_json(client_socket, message_json)
 
         if debug:
-            print('Sending message to Unity')
-            print('Time difference:', time_diff)
+            print("Sending message to Unity")
+            print("Time difference:", time_diff)
 
         # Wait for the calculated time difference before sending the next message
         time.sleep(time_diff)
@@ -162,18 +203,44 @@ if __name__ == "__main__":
         print("InfluxDB is NOT running. Did you run bash build_and_run.sh?")
         exit(1)
     # Create an argument parser
-    parser = argparse.ArgumentParser(description="Load a scenario from InfluxDB or JSON and send the messages to Unity")
+    parser = argparse.ArgumentParser(
+        description="Load a scenario from InfluxDB or JSON and send the messages to Unity"
+    )
 
     # Define command-line arguments
-    parser.add_argument("--ip", type=str, default="localhost", help="Unity Address (default: localhost)")
-    parser.add_argument("--port", type=int, default=54321, help="Unity Port (default: 54321)")
-    parser.add_argument("--org", type=str, default="rovernet", help="InfluxDB Organisation (default: rovernet)")
-    parser.add_argument("--bucket", type=str, default="crownet", help="InfluxDB Bucket (default: crownet)")
+    parser.add_argument(
+        "--ip", type=str, default="localhost", help="Unity Address (default: localhost)"
+    )
+    parser.add_argument(
+        "--port", type=int, default=54321, help="Unity Port (default: 54321)"
+    )
+    parser.add_argument(
+        "--org",
+        type=str,
+        default="rovernet",
+        help="InfluxDB Organisation (default: rovernet)",
+    )
+    parser.add_argument(
+        "--bucket",
+        type=str,
+        default="crownet",
+        help="InfluxDB Bucket (default: crownet)",
+    )
     group = parser.add_argument_group("only one of this Arguments must be set:")
     group.add_argument("--scenario", type=str, help="InfluxDB Scenario Name")
     group.add_argument("--json-path", type=str, help="JSON path")
-    parser.add_argument("--start", action=int, default=0, help="Start time of the scenario (default: 0)")
-    parser.add_argument("--debug", action="store_true", default=False, help="Log time difference of messages to console (default: False)")
+    parser.add_argument(
+        "--start",
+        type=int,
+        default=0,
+        help="Start time of the scenario (default: 0)",
+    )
+    parser.add_argument(
+        "--debug",
+        action="store_true",
+        default=False,
+        help="Log time difference of messages to console (default: False)",
+    )
 
 # Parse the command-line arguments
 args = parser.parse_args()
@@ -182,5 +249,20 @@ args = parser.parse_args()
 if not (args.scenario is None) ^ (args.json_path is None):
     parser.error("Please provide either --scenario or --json-path, but not both.")
 
+
+time_control_constant = 1
+time_control_constant_thread = threading.Thread(target=update_time_control_constant)
+time_control_constant_thread.daemon = True  # Exit when main thread stops
+time_control_constant_thread.start()
+
 # Call the send_message function with the specified arguments
-send_message(args.ip, args.port, args.scenario, args.org, args.bucket, args.start, args.json_path, args.debug)
+send_message(
+    args.ip,
+    args.port,
+    args.scenario,
+    args.org,
+    args.bucket,
+    args.start,
+    args.json_path,
+    args.debug,
+)
