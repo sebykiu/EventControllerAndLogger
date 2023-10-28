@@ -27,7 +27,7 @@ class CustomEncoder(json.JSONEncoder):
         return default(obj)
 
 
-def retrieve_messages(data_source, scenario=None, org=None, bucket=None, json_path=None):
+def retrieve_messages(data_source, scenario=None, org=None, bucket=None, json_path=None, start_time=0):
     if data_source == "influx":
         # Create an InfluxDB client
         client = influxdb_client.InfluxDBClient(url='http://localhost:8086', token='secret-token', org=org)
@@ -35,7 +35,7 @@ def retrieve_messages(data_source, scenario=None, org=None, bucket=None, json_pa
 
         # InfluxDB query to load values for specific scenario and pivot them together for them to be returned in one column
         query = f'from(bucket: "{bucket}") \
-            |> range(start: 1688234705) \
+            |> range(start: {start_time}) \
             |> filter(fn: (r) => r._measurement == "omnet++" and r.scenario == "{scenario}") \
             |> pivot(rowKey:["_time"], columnKey: ["_field"], valueColumn: "_value") \
             |> sort(columns: ["_time"])'
@@ -100,7 +100,7 @@ def send_message_json(client_socket, message_json):
     client_socket.sendall(message_json.encode())
 
 
-def send_message(ip, port, scenario, org, bucket, json_path=None, debug=False):
+def send_message(ip, port, scenario, org, bucket, start_time, json_path=None, debug=False):
     # Create a socket object
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -112,7 +112,7 @@ def send_message(ip, port, scenario, org, bucket, json_path=None, debug=False):
     if json_path:
         messages = retrieve_messages_from_json(json_path)
     else:
-        messages = retrieve_messages_from_influx(scenario, org, bucket)
+        messages = retrieve_messages_from_influx(scenario, org, bucket, start_time)
 
     print("Loaded {}".format(len(messages)))
 
@@ -172,6 +172,7 @@ if __name__ == "__main__":
     group = parser.add_argument_group("only one of this Arguments must be set:")
     group.add_argument("--scenario", type=str, help="InfluxDB Scenario Name")
     group.add_argument("--json-path", type=str, help="JSON path")
+    parser.add_argument("--start", action=int, default=0, help="Start time of the scenario (default: 0)")
     parser.add_argument("--debug", action="store_true", default=False, help="Log time difference of messages to console (default: False)")
 
 # Parse the command-line arguments
@@ -182,4 +183,4 @@ if not (args.scenario is None) ^ (args.json_path is None):
     parser.error("Please provide either --scenario or --json-path, but not both.")
 
 # Call the send_message function with the specified arguments
-send_message(args.ip, args.port, args.scenario, args.org, args.bucket, args.json_path, args.debug)
+send_message(args.ip, args.port, args.scenario, args.org, args.bucket, args.start, args.json_path, args.debug)
