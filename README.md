@@ -19,8 +19,6 @@ git clone https://github.com/skiunke/EventControllerAndLogger.git ecal
 
 ### Usage
 
-> ⚠️ The containers must run for both recording and InfluxPlay as it deploys the InfluxDB instance.
-
 The shell script:
 - Instantiates InfluxDB
 - Builds ECAL
@@ -55,8 +53,6 @@ pip3 install -r requirements.txt
 ```
 
 ### Usage
-
-> ⚠️ This requires the local influxdb docker instance to be running.
 
 Usage options:
 
