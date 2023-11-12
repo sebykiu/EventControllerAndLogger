@@ -116,7 +116,6 @@ def retrieve_messages(
                 and object_type is not None
                 and coordinates is not None
                 and sim_time is not None
-                and timestamp is not None
             ):
                 x = coordinates.get("X", None)
                 y = coordinates.get("Y", None)
