@@ -31,6 +31,7 @@ public class InfluxDb
             .Field("X", message.Coordinates.X)
             .Field("Y", message.Coordinates.Y)
             .Field("Z", message.Coordinates.Z)
+            .Field("SimTime", message.SimTime)
             .Timestamp(DateTime.UtcNow, WritePrecision.Ns);
 
         if (_specificTag != "default")

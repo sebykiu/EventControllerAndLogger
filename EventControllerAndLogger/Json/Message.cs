@@ -9,4 +9,6 @@ public class Message
     public Coordinates Coordinates { get; set; }
    
     public string ObjectType { get; set; }
+
+    public string SimTime { get; set; }
 }
