@@ -125,8 +125,8 @@ public class Ecal
 
             Debug.Assert(message != null, nameof(message) + " != null");
             Console.WriteLine(
-                "[Notification] Count: {0} Deserialized: " + "SourceId: {1},TargetID: {2}, ObjectType:{3}, Coordinates: X:{4}, Y:{5}, Z:{6}", count,
-                message.SourceId, message.TargetId, message.ObjectType, message.Coordinates.X, message.Coordinates.Y, message.Coordinates.Z);
+                "[Notification] Count: {0} Deserialized: " + "SourceId: {1},TargetID: {2}, ObjectType:{3}, Coordinates: X:{4}, Y:{5}, Z:{6}, SimTime:{7}", count,
+                message.SourceId, message.TargetId, message.ObjectType, message.Coordinates.X, message.Coordinates.Y, message.Coordinates.Z,message.SimTime);
             _influxDb.WriteToDatabase(message);
         }
 
