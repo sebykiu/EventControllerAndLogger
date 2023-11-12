@@ -74,6 +74,7 @@ def retrieve_messages(
                 x = record.values.get("X", None)
                 y = record.values.get("Y", None)
                 z = record.values.get("Z", None)
+                sim_time = record.values.get("SimTime", None)
                 timestamp = record.values.get("_time", None)
 
                 # If all necessary fields are present, create a message
@@ -83,6 +84,7 @@ def retrieve_messages(
                     and x is not None
                     and y is not None
                     and z is not None
+                    and sim_time is not None
                     and timestamp is not None
                 ):
                     coordinates = Coordinates(x, y, z)
@@ -92,6 +94,7 @@ def retrieve_messages(
                         object_type,
                         coordinates,
                         timestamp,
+                        sim_time,
                         scenario,
                     )
                     messages.append(message)
@@ -105,13 +108,14 @@ def retrieve_messages(
             target_id = record.get("TargetId")
             object_type = record.get("ObjectType", None)
             coordinates = record.get("Coordinates", None)
+            sim_time = record.values.get("SimTime", None)
             timestamp = record.get("Timestamp", None)
 
             if (
                 source_id is not None
                 and object_type is not None
                 and coordinates is not None
-                and timestamp is not None
+                and sim_time is not None
             ):
                 x = coordinates.get("X", None)
                 y = coordinates.get("Y", None)
@@ -121,7 +125,7 @@ def retrieve_messages(
                 # Convert the timestamp from string to datetime
                 timestamp = datetime.datetime.fromtimestamp(float(timestamp))
                 message = Message(
-                    source_id, target_id, object_type, coordinates, timestamp
+                    source_id, target_id, object_type, coordinates, timestamp, sim_time
                 )
                 messages.append(message)
 
