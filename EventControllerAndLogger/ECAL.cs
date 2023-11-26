@@ -31,38 +31,7 @@ public class Ecal
         {
             Console.WriteLine("[Notification] Logging to InfluxDB disabled.");
         }
-
-        if (appConfig.UseUnity)
-        {
-            Console.WriteLine("[Notification] Exporting to Unity enabled.");
-
-            _unityClient = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-
-
-            var ep = new IPEndPoint(IPAddress.Parse(appConfig.UnityAddr), appConfig.UnityPort);
-
-
-            while (true)
-            {
-                try
-                {
-                    _unityClient.Connect(ep);
-                    Console.WriteLine("[Notification] Successfully connected to Unity");
-                    break; // Connection successful, exit loop
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"[Error] Unity is not reachable: {ex.Message}. Retry in 5 seconds.");
-                    Thread.Sleep(5000);
-                    // After the delay, the loop will repeat and attempt to connect again
-                }
-            }
-        }
-        else
-        {
-            Console.WriteLine("[Notification] Exporting to Unity disabled.");
-        }
-
+        
 
         var serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
@@ -94,7 +63,6 @@ public class Ecal
             Console.WriteLine("[Notification] Received Message Length");
 
 
-            if (_appConfig.UseUnity && _unityClient.Connected) _unityClient.Send(lengthBuffer);
 
             if (BitConverter.IsLittleEndian)
             {
@@ -116,9 +84,7 @@ public class Ecal
 
 
             count += 1;
-
-            if (_appConfig.UseUnity && _unityClient.Connected) _unityClient.Send(messageBuffer);
-
+            
             var response = Encoding.UTF8.GetString(messageBuffer, 0, received);
 
             var message = JsonConvert.DeserializeObject<Message>(response);

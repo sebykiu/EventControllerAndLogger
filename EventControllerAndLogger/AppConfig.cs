@@ -2,7 +2,6 @@ namespace EventControllerAndLogger;
 
 public class AppConfig
 {
-    public bool UseUnity { get; set; }
     public bool UseCrownet { get; set; }
     public bool UseInflux { get; set; }
     public int OmnetPort { get; set; }

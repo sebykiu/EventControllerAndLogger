@@ -1,4 +1,3 @@
-UseUnity: false
 UseCrownet: true
 UseInflux: true
 OmnetPort: 12345
