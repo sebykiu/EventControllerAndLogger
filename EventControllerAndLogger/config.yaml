@@ -1,8 +1,4 @@
-UseCrownet: true
-UseInflux: true
 OmnetPort: 12345
-UnityAddr: localhost
-UnityPort: 54321
 InfluxAddr: influxdb
 InfluxPort: 8086
 # Set a unique Tag to store messages in influxdb.
