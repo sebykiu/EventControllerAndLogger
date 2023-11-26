@@ -16,7 +16,7 @@ abstract class Program
         configuration.Bind(appConfig);
 
         Console.WriteLine(
-            $"UseUnity: {appConfig.UseUnity}, UseCrownet: {appConfig.UseCrownet}, UseInflux: {appConfig.UseInflux}, OmnetPort: {appConfig.OmnetPort}, UnityAddr: {appConfig.UnityAddr}, UnityPort: {appConfig.UnityPort}, InfluxAddr: {appConfig.InfluxAddr}, InfluxPort: {appConfig.InfluxPort}. SpecificTag: {appConfig.SpecificTag}");
+            $"UseUnity: OmnetPort: {appConfig.OmnetPort}, InfluxAddr: {appConfig.InfluxAddr}, InfluxPort: {appConfig.InfluxPort}. SpecificTag: {appConfig.SpecificTag}");
 
         Ecal _ = new Ecal(appConfig);
     }
