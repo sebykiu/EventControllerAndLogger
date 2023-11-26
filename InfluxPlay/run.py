@@ -202,7 +202,7 @@ if __name__ == "__main__":
     # Check if InfluxDB container is running
     influxdb_check_cmd = 'docker ps --format "{{.Names}}" | grep -q "^influxdb$"'
     if subprocess.call(influxdb_check_cmd, shell=True) == 0:
-        print("InfluxDB is running!")
+        print("InfluxDB health check successful!")
     else:
         print("InfluxDB is NOT running. Did you run bash build_and_run.sh?")
         exit(1)
