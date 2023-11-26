@@ -8,8 +8,8 @@ enables message logging to a local InfluxDB instance, that can later be played b
 
 ### Dependencies
 - Docker
-- Docker - Compose
-- Python3
+- Docker Compose
+- Python3 (required for InfluxPlay)
 
 ### Installation
 
@@ -18,23 +18,19 @@ git clone https://github.com/skiunke/EventControllerAndLogger.git ecal
 ```
 
 ### Usage
+By Default ECAL only records and stores Messages in InfluxDB and does not forward them to Unity as InfluxPlay allows more granular controls.
+Settings can be change in the [Config](https://github.com/skiunke/EventControllerAndLogger/blob/main/EventControllerAndLogger/config.yaml) file. This requires a rerun of the build_and_run script.
 
 The shell script:
-- Instantiates InfluxDB
-- Builds ECAL
-- Sets up the Docker Network
-- and starts the service to record messages or play back with InfluxPlay
+- Pulls InfluxDB and builds ECAL.
+- Waits for OMNeT++ to connect or InfluxPlay to be used for message playback.
+
 
 ```shell
 # /ecal
 bash build_and_run.sh
 ```
 
-By default ECAL only records and does not forward to Unity automatically as the InfluxPlay module allows more granular controls. The default ports 
-and settings 
-can be viewed and changed 
-in the
-[Config](https://github.com/skiunke/EventControllerAndLogger/blob/main/EventControllerAndLogger/config.yaml). This requires a restart. 
  
 
 > InfluxDB is locally accessible under: https://localhost:8086 <br>
@@ -57,17 +53,20 @@ pip3 install -r requirements.txt
 Usage options:
 
 ```shell
+# /ecal/InfluxPlay
 python3 run.py --help
 ```
 
 Execution of a JSON based scenario:
 
 ```shell
+# /ecal/InfluxPlay
 python3 run.py --json-path Scenarios/Freiheit.json
 ```
 
 Execution of a InfluxDB based scenario:
 
 ```shell
+# /ecal/InfluxPlay
 python3 run.py --scenario vruMec 
 ```

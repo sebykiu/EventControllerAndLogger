@@ -231,7 +231,7 @@ if __name__ == "__main__":
         help="InfluxDB Bucket (default: crownet)",
     )
     group = parser.add_argument_group("only one of this Arguments must be set:")
-    group.add_argument("--scenario", type=str, help="InfluxDB Scenario Name")
+    group.add_argument("--scenario", type=str, help="InfluxDB Scenario Name (see SpecificTag in config.yaml)")
     group.add_argument("--json-path", type=str, help="JSON path")
     parser.add_argument(
         "--start",
