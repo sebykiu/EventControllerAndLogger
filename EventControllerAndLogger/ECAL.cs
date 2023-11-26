@@ -22,7 +22,7 @@ public class Ecal
 
         try
         {
-            _influxDb = new(appConfig.InfluxAddr, appConfig.InfluxPort, appConfig.SpecificTag);
+            _influxDb = new(appConfig.InfluxAddr, appConfig.InfluxPort, appConfig.SpecificTag, appConfig.InfluxBufferSize);
         }
         finally
         {

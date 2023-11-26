@@ -8,4 +8,6 @@ public class AppConfig
 
     public string SpecificTag { get; set; }
 
+    public int InfluxBufferSize { get; set; }
+
 }

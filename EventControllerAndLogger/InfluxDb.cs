@@ -13,13 +13,16 @@ public class InfluxDb
 
     private readonly InfluxDBClient _client;
     private readonly string _specificTag;
-
-    public InfluxDb(string influxAddr, int influxPort, string specificTag)
+    private readonly List<PointData> _pointDataBuffer;
+    private readonly int _maxBufferSize;
+    public InfluxDb(string influxAddr, int influxPort, string specificTag, int maxBufferSize)
 
 
     {
         _client = new InfluxDBClient($"http://{influxAddr}:{influxPort}", Token);
         _specificTag = specificTag;
+        _pointDataBuffer = new List<PointData>();
+        _maxBufferSize = maxBufferSize;
     }
 
     public void WriteToDatabase(Message message)
@@ -39,9 +42,29 @@ public class InfluxDb
             msg = msg.Tag("scenario", _specificTag);
         }
 
-        using var writeApi = _client.GetWriteApi();
-        writeApi.WritePoint(bucket: Bucket, org: Org, point: msg);
+        _pointDataBuffer.Add(msg);
 
-        Console.WriteLine("[Notification] Message logged to InfluxDB");
+        if (_pointDataBuffer.Count >= _maxBufferSize)
+        {
+            FlushData();
+        }
+    }
+
+    private void FlushData()
+    {
+        using var writeApi = _client.GetWriteApi();
+        writeApi.WritePoints(bucket: Bucket, org: Org, points: _pointDataBuffer);
+        _pointDataBuffer.Clear();
+        Console.WriteLine($"[Notification] {_pointDataBuffer.Count} messages logged to InfluxDB");
+    }
+
+    public void Dispose()
+    {
+        if (_pointDataBuffer.Count > 0)
+        {
+            FlushData();
+            
+        }
+        _client.Dispose();
     }
 }
