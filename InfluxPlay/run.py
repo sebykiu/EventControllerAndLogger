@@ -108,7 +108,7 @@ def retrieve_messages(
             target_id = record.get("TargetId")
             object_type = record.get("ObjectType", None)
             coordinates = record.get("Coordinates", None)
-            sim_time = record.values.get("SimTime", None)
+            sim_time = record.get("Timestamp", None)
             timestamp = record.get("Timestamp", None)
 
             if (
@@ -127,6 +127,7 @@ def retrieve_messages(
                 message = Message(
                     source_id, target_id, object_type, coordinates, timestamp, sim_time
                 )
+    
                 messages.append(message)
 
     return messages
@@ -154,9 +155,9 @@ def send_message(
     print("Loading messages.")
     # Retrieve messages from InfluxDB for the specified scenario or from a JSON file
     if json_path:
-        messages = retrieve_messages_from_json(json_path)
+        messages = retrieve_messages("json", json_path = json_path)
     else:
-        messages = retrieve_messages_from_influx(scenario, org, bucket, start_time)
+        messages = retrieve_messages("influx", scenario=scenario, org=org, bucket=bucket, start_time=start_time)
 
     print("Loaded {}".format(len(messages)))
 
