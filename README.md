@@ -7,8 +7,8 @@ ECAL is a subpart of the [GitHub - 3D Unity Stack](https://github.com/skiunke/Cr
 enables message logging to a local InfluxDB instance, that can later be played back to Unity with InfluxPlay. Alternatively JSON files are used.
 
 ### Dependencies
-- Docker
-- Docker Compose
+- [Docker](https://docs.docker.com/engine/install/ubuntu/)
+- [Docker Compose](https://docs.docker.com/compose/install/)
 - Python3 (required for InfluxPlay)
 
 ### Installation
@@ -33,7 +33,7 @@ bash build_and_run.sh
 
  
 
-> InfluxDB is locally accessible under: https://localhost:8086 <br>
+> InfluxDB is locally accessible under: http://localhost:8086 <br>
 > > Username: admin <br>
 > > Password: password
 
@@ -45,7 +45,7 @@ Messages stored in the InfluxDB database or in JSON files are played back to Uni
 
 ```shell
 # /ecal/InfluxPlay
-pip3 install -r requirements.txt
+python3 -m pip install -r requirements.txt
 ```
 
 ### Usage

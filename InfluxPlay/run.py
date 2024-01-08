@@ -10,6 +10,8 @@ import subprocess
 import functools
 
 
+time_control_constant = 1
+
 # Custom encoder to support datetime and Message object
 @functools.singledispatch
 def default(obj):
@@ -144,13 +146,21 @@ def send_message_json(client_socket, message_json):
 
 
 def send_message(
-    ip, port, scenario, org, bucket, start_time, json_path=None, debug=False
+    ip, port, scenario, org, bucket, start_time, json_path=None, debug=False, ignore_file = None
 ):
+    
+    ignore_list = read_ignore_list(ignore_file) if ignore_file else []
+
     # Create a socket object
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-    # Connect to the server
-    client_socket.connect((ip, port))
+    # Try to Connect to the server
+    try: 
+        client_socket.connect((ip, port))
+    except ConnectionRefusedError:
+        print('[Critical Exception] ConnectionRefusedError: Couldn\'t connect to Unity. Is it running? Check the ports and address!' )
+        exit(1)
+        
     print("Connected to the server.")
     print("Loading messages.")
     # Retrieve messages from InfluxDB for the specified scenario or from a JSON file
@@ -169,6 +179,13 @@ def send_message(
     # Calculates the time difference between the current and previous message and let's the execution sleep accordingly
     for i, message in enumerate(messages):
         # First message doesn't have previous message
+        
+        for i, message in enumerate(messages):
+            # Check if the message source_id is in the ignore list
+            if message.SourceId in ignore_list:
+                print("$source_id was skipped!")
+                continue
+                
         if i == 0:
             time_diff = 0
         else:
@@ -198,15 +215,23 @@ def send_message(
     # Close the socket
     client_socket.close()
 
+def read_ignore_list(file_path):
+    ignore_list = []
+    with open(file_path, 'r') as file:
+        for line in file:
+            stripped_line = line.strip()
+            if stripped_line and not stripped_line.startswith('#'):
+                ignore_list.append(stripped_line)
+    print(ignore_list)
+    return ignore_list
 
 if __name__ == "__main__":
     # Check if InfluxDB container is running
     influxdb_check_cmd = 'docker ps --format "{{.Names}}" | grep -q "^influxdb$"'
     if subprocess.call(influxdb_check_cmd, shell=True) == 0:
-        print("InfluxDB health check successful!")
+        print("InfluxDB is reachable and health check succeeded!")
     else:
-        print("InfluxDB is NOT running. Did you run bash build_and_run.sh?")
-        exit(1)
+        print("[Critical Warning] InfluxDB is NOT running. Did you run bash build_and_run.sh? You can ignore this Warning if you only want to use JSON files.")
     # Create an argument parser
     parser = argparse.ArgumentParser(
         description="Load a scenario from InfluxDB or JSON and send the messages to Unity"
@@ -246,6 +271,12 @@ if __name__ == "__main__":
         default=False,
         help="Log time difference of messages to console (default: False)",
     )
+    parser.add_argument(
+    "--ignore_file",
+    type=str,
+    default="",
+    help="Path to ignore file listing objects to not be send to Unity."
+    )
 
 # Parse the command-line arguments
 args = parser.parse_args()
@@ -253,12 +284,6 @@ args = parser.parse_args()
 # Check that either scenario or json-path is provided, but not both
 if not (args.scenario is None) ^ (args.json_path is None):
     parser.error("Please provide either --scenario or --json-path, but not both.")
-
-
-time_control_constant = 1
-time_control_constant_thread = threading.Thread(target=update_time_control_constant)
-time_control_constant_thread.daemon = True  # Exit when main thread stops
-time_control_constant_thread.start()
 
 # Call the send_message function with the specified arguments
 send_message(
@@ -270,4 +295,10 @@ send_message(
     args.start,
     args.json_path,
     args.debug,
+    args.ignore_file
 )
+
+time_control_constant = 1
+time_control_constant_thread = threading.Thread(target=update_time_control_constant)
+time_control_constant_thread.daemon = True  # Exit when main thread stops
+time_control_constant_thread.start()

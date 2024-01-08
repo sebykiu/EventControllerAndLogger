@@ -8,4 +8,6 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = EventControllerAndLogger
-build_property.ProjectDir = /Users/skiunke/RiderProjects/EventControllerAndLogger/EventControllerAndLogger/
+build_property.ProjectDir = /home/sebastian/Documents/EventControllerAndLogger/EventControllerAndLogger/
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 

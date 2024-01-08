@@ -1994,19 +1994,19 @@
     ]
   },
   "packageFolders": {
-    "/Users/skiunke/.nuget/packages/": {}
+    "/home/sebastian/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/skiunke/RiderProjects/EventControllerAndLogger/EventControllerAndLogger/EventControllerAndLogger.csproj",
+      "projectUniqueName": "/home/sebastian/Documents/EventControllerAndLogger/EventControllerAndLogger/EventControllerAndLogger.csproj",
       "projectName": "EventControllerAndLogger",
-      "projectPath": "/Users/skiunke/RiderProjects/EventControllerAndLogger/EventControllerAndLogger/EventControllerAndLogger.csproj",
-      "packagesPath": "/Users/skiunke/.nuget/packages/",
-      "outputPath": "/Users/skiunke/RiderProjects/EventControllerAndLogger/EventControllerAndLogger/obj/",
+      "projectPath": "/home/sebastian/Documents/EventControllerAndLogger/EventControllerAndLogger/EventControllerAndLogger.csproj",
+      "packagesPath": "/home/sebastian/.nuget/packages/",
+      "outputPath": "/home/sebastian/Documents/EventControllerAndLogger/EventControllerAndLogger/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/Users/skiunke/.nuget/NuGet/NuGet.Config"
+        "/home/sebastian/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net7.0"
@@ -2070,12 +2070,26 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
+        "downloadDependencies": [
+          {
+            "name": "Microsoft.AspNetCore.App.Ref",
+            "version": "[7.0.14, 7.0.14]"
+          },
+          {
+            "name": "Microsoft.NETCore.App.Host.linux-x64",
+            "version": "[7.0.14, 7.0.14]"
+          },
+          {
+            "name": "Microsoft.NETCore.App.Ref",
+            "version": "[7.0.14, 7.0.14]"
+          }
+        ],
         "frameworkReferences": {
           "Microsoft.NETCore.App": {
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/7.0.101/RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/8.0.100/RuntimeIdentifierGraph.json"
       }
     }
   }
