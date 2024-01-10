@@ -1,0 +1,13 @@
+[
+  {
+    "SourceId" : "debug",
+    "TargetId" : "",
+    "ObjectType": "person",
+    "Coordinates" : {
+      "X":  0,
+      "Y":  0,
+      "Z": 2
+    },
+    "SimTime": "5"
+  }
+]

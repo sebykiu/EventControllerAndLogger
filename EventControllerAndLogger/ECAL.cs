@@ -37,7 +37,7 @@ public class Ecal
         serverSocket.Bind(endPoint);
 
         serverSocket.Listen(1);
-        Console.WriteLine("[Notification] Waiting for OMNeT++ Simulation to connect on Port: {0}",
+        Console.WriteLine("[Notification] Ready for OMNeT++ to connect on Port: {0}. Otherwise use EC",
             appConfig1.OmnetPort.ToString());
         _clientSocket = serverSocket.Accept();
         Console.WriteLine("[Notification] OMNeT++ connected");

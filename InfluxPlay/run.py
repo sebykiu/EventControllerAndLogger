@@ -9,8 +9,8 @@ import argparse
 import subprocess
 import functools
 
-
 time_control_constant = 1
+
 
 # Custom encoder to support datetime and Message object
 @functools.singledispatch
@@ -43,7 +43,7 @@ def update_time_control_constant():
 
 
 def retrieve_messages(
-    data_source, scenario=None, org=None, bucket=None, json_path=None, start_time=0
+        data_source, scenario=None, org=None, bucket=None, json_path=None, start_time=0
 ):
     if data_source == "influx":
         # Create an InfluxDB client
@@ -52,7 +52,8 @@ def retrieve_messages(
         )
         query_api = client.query_api()
 
-        # InfluxDB query to load values for specific scenario and pivot them together for them to be returned in one column
+        # InfluxDB query to load values for specific scenario and pivot them together for them to be returned in one
+        # column
         query = f'from(bucket: "{bucket}") \
             |> range(start: {start_time}) \
             |> filter(fn: (r) => r._measurement == "omnet++" and r.scenario == "{scenario}") \
@@ -77,25 +78,23 @@ def retrieve_messages(
                 y = record.values.get("Y", None)
                 z = record.values.get("Z", None)
                 sim_time = record.values.get("SimTime", None)
-                timestamp = record.values.get("_time", None)
 
                 # If all necessary fields are present, create a message
                 if (
-                    source_id is not None
-                    and object_type is not None
-                    and x is not None
-                    and y is not None
-                    and z is not None
-                    and sim_time is not None
-                    and timestamp is not None
+                        source_id is not None
+                        and object_type is not None
+                        and x is not None
+                        and y is not None
+                        and z is not None
+
                 ):
                     coordinates = Coordinates(x, y, z)
+                    sim_time = datetime.datetime.fromtimestamp(float(sim_time))
                     message = Message(
                         source_id,
                         target_id,
                         object_type,
                         coordinates,
-                        timestamp,
                         sim_time,
                         scenario,
                     )
@@ -110,26 +109,22 @@ def retrieve_messages(
             target_id = record.get("TargetId")
             object_type = record.get("ObjectType", None)
             coordinates = record.get("Coordinates", None)
-            sim_time = record.get("Timestamp", None)
-            timestamp = record.get("Timestamp", None)
+            sim_time = record.get("SimTime", None)
 
             if (
-                source_id is not None
-                and object_type is not None
-                and coordinates is not None
-                and sim_time is not None
+                    source_id is not None
+                    and object_type is not None
+                    and coordinates is not None
+                    and sim_time is not None
             ):
                 x = coordinates.get("X", None)
                 y = coordinates.get("Y", None)
                 z = coordinates.get("Z", None)
                 coordinates = Coordinates(x, y, z)
-
-                # Convert the timestamp from string to datetime
-                timestamp = datetime.datetime.fromtimestamp(float(timestamp))
                 message = Message(
-                    source_id, target_id, object_type, coordinates, timestamp, sim_time
+                    source_id, target_id, object_type, coordinates, sim_time
                 )
-    
+
                 messages.append(message)
 
     return messages
@@ -146,26 +141,27 @@ def send_message_json(client_socket, message_json):
 
 
 def send_message(
-    ip, port, scenario, org, bucket, start_time, json_path=None, debug=False, ignore_file = None
+        ip, port, scenario, org, bucket, start_time, json_path=None, debug=False, ignore_file=None
 ):
-    
     ignore_list = read_ignore_list(ignore_file) if ignore_file else []
 
     # Create a socket object
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
     # Try to Connect to the server
-    try: 
+    try:
         client_socket.connect((ip, port))
     except ConnectionRefusedError:
-        print('[Critical Exception] ConnectionRefusedError: Couldn\'t connect to Unity. Is it running? Check the ports and address!' )
+        print(
+            '[Critical Exception] ConnectionRefusedError: Couldn\'t connect to Unity. Is it running? Check the ports '
+            'and address!')
         exit(1)
-        
+
     print("Connected to the server.")
     print("Loading messages.")
     # Retrieve messages from InfluxDB for the specified scenario or from a JSON file
     if json_path:
-        messages = retrieve_messages("json", json_path = json_path)
+        messages = retrieve_messages("json", json_path=json_path)
     else:
         messages = retrieve_messages("influx", scenario=scenario, org=org, bucket=bucket, start_time=start_time)
 
@@ -176,22 +172,20 @@ def send_message(
         client_socket.close()
         return
 
-    # Calculates the time difference between the current and previous message and let's the execution sleep accordingly
+    # Calculates the time difference between the current and previous message and lets the execution sleep accordingly
     for i, message in enumerate(messages):
-        # First message doesn't have previous message
-        
-        for i, message in enumerate(messages):
-            # Check if the message source_id is in the ignore list
-            if message.SourceId in ignore_list:
-                print("$source_id was skipped!")
-                continue
-                
+        # Check if the message source_id is in the ignore list
+        if message.SourceId in ignore_list:
+            print(f"SourceId {message.SourceId} was found in the ignore list and is therefore skipped!")
+            continue
+
         if i == 0:
             time_diff = 0
         else:
+            print(f"{message.SimTime} this is the simTime", message.SimTime)
             time_diff = (
-                message.Timestamp - messages[i - 1].Timestamp
-            ).total_seconds() * time_control_constant
+                                message.SimTime - messages[i - 1].SimTime
+                        ).total_seconds() * time_control_constant
 
         # Convert the message to JSON using the custom encoder
         message_json = json.dumps(message, cls=CustomEncoder)
@@ -206,7 +200,6 @@ def send_message(
         send_message_json(client_socket, message_json)
 
         if debug:
-            print("Sending message to Unity")
             print("Time difference:", time_diff)
 
         # Wait for the calculated time difference before sending the next message
@@ -214,6 +207,7 @@ def send_message(
 
     # Close the socket
     client_socket.close()
+
 
 def read_ignore_list(file_path):
     ignore_list = []
@@ -225,13 +219,16 @@ def read_ignore_list(file_path):
     print(ignore_list)
     return ignore_list
 
+
 if __name__ == "__main__":
     # Check if InfluxDB container is running
     influxdb_check_cmd = 'docker ps --format "{{.Names}}" | grep -q "^influxdb$"'
     if subprocess.call(influxdb_check_cmd, shell=True) == 0:
         print("InfluxDB is reachable and health check succeeded!")
     else:
-        print("[Critical Warning] InfluxDB is NOT running. Did you run bash build_and_run.sh? You can ignore this Warning if you only want to use JSON files.")
+        print(
+            "[Critical Warning] InfluxDB is NOT running. Did you run bash build_and_run.sh? You can ignore this "
+            "Warning if you only want to use JSON files.")
     # Create an argument parser
     parser = argparse.ArgumentParser(
         description="Load a scenario from InfluxDB or JSON and send the messages to Unity"
@@ -272,10 +269,10 @@ if __name__ == "__main__":
         help="Log time difference of messages to console (default: False)",
     )
     parser.add_argument(
-    "--ignore_file",
-    type=str,
-    default="",
-    help="Path to ignore file listing objects to not be send to Unity."
+        "--ignore_file",
+        type=str,
+        default="",
+        help="Path to ignore file listing objects to not be send to Unity."
     )
 
 # Parse the command-line arguments
